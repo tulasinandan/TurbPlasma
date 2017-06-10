@@ -2,6 +2,63 @@
 import numpy as np
 from os.path import basename, realpath, exists
    
+###-------------------------------------------------------------------------------
+###
+### THESE ROUTINES BELONG TO A MORE GENERAL LIBRARY BUT COPYING THEM HERE FOR
+### COMPACTNESS FOR NOW. I HAVE THEM IN A LIBRARY CALLED AnalysisFunctions.
+### I WILL REMOVE THEM WHEN I SHARE WITH YOU THE COMPLETE PACKAGE.
+###                                     TULASI - May 24, 2017
+###
+###-------------------------------------------------------------------------------
+##
+## Second derivative for periodic arrays
+##
+def pdderiv(ar,dx=1.,ax=0,order=4,smth=None):
+   """
+      pderiv gives the double partial derivative
+      of a periodic array along a given axis.
+
+      Inputs:
+         ar - The input array
+         dx - Grid spacing, defaults to 1.
+         ax - Axis along which to take the derivative
+         order - Order of accuracy, (2,4) defaults to 2
+
+      Output:
+         dar - The derivative array
+   """
+   if smth is not None:
+      ar=gf(ar,sigma=smth)
+   if order == 2:
+      dar = (np.roll(ar,-1,axis=ax) - 2*ar + np.roll(ar,1,axis=ax))/dx**2
+   elif order == 4:
+      dar = (-np.roll(ar,-2,axis=ax) + 16*np.roll(ar,-1,axis=ax) - 30*ar + 16*np.roll(ar,1,axis=ax)-np.roll(ar,2,axis=ax))/(12*dx**2)
+
+   return dar
+
+##
+## Curl of a periodic array
+##
+def pcurl(arx,ary,arz,dx=1.,dy=1.,dz=1.,smth=None):
+   return pderiv(arz,dx=dy,ax=1,smth=smth)-pderiv(ary,dx=dz,ax=2,smth=smth),\
+          pderiv(arx,dx=dz,ax=2,smth=smth)-pderiv(arz,dx=dx,ax=0,smth=smth),\
+          pderiv(ary,dx=dx,ax=0,smth=smth)-pderiv(arx,dx=dy,ax=1,smth=smth)
+
+def pcurlx(ary,arz,dx=1.,dy=1.,dz=1.,smth=None):
+   return pderiv(arz,dx=dy,ax=1,smth=smth)-pderiv(ary,dx=dz,ax=2,smth=smth)
+
+def pcurly(arz,arx,dx=1.,dy=1.,dz=1.,smth=None):
+   return pderiv(arx,dx=dz,ax=2,smth=smth)-pderiv(arz,dx=dx,ax=0,smth=smth)
+
+def pcurlz(arx,ary,dx=1.,dy=1.,dz=1.,smth=None):
+   return pderiv(ary,dx=dx,ax=0,smth=smth)-pderiv(arx,dx=dy,ax=1,smth=smth)
+
+### ----------------------------------------------------------------------------------------
+###
+###  END OUTSIDE ROUTINES. WILL BE REMOVED IN THE COMPLETE PACKAGE SHARED LATER
+###
+### ----------------------------------------------------------------------------------------
+
 class spc(object):
    """SPectral Code Reader: First Cut
 	First Cut - 2017/01/13
@@ -162,63 +219,6 @@ class spc(object):
          if i in self.derived:
             self.__dict__[i] = self._derivedv(i)
             
-###-------------------------------------------------------------------------------
-###
-### THESE ROUTINES BELONG TO A MORE GENERAL LIBRARY BUT COPYING THEM HERE FOR
-### COMPACTNESS FOR NOW. I HAVE THEM IN A LIBRARY CALLED AnalysisFunctions.
-### I WILL REMOVE THEM WHEN I SHARE WITH YOU THE COMPLETE PACKAGE.
-###                                     TULASI - May 24, 2017
-###
-###-------------------------------------------------------------------------------
-##
-## Second derivative for periodic arrays
-##
-def pdderiv(ar,dx=1.,ax=0,order=4,smth=None):
-   """
-      pderiv gives the double partial derivative
-      of a periodic array along a given axis.
-
-      Inputs:
-         ar - The input array
-         dx - Grid spacing, defaults to 1.
-         ax - Axis along which to take the derivative
-         order - Order of accuracy, (2,4) defaults to 2
-
-      Output:
-         dar - The derivative array
-   """
-   if smth is not None:
-      ar=gf(ar,sigma=smth)
-   if order == 2:
-      dar = (np.roll(ar,-1,axis=ax) - 2*ar + np.roll(ar,1,axis=ax))/dx**2
-   elif order == 4:
-      dar = (-np.roll(ar,-2,axis=ax) + 16*np.roll(ar,-1,axis=ax) - 30*ar + 16*np.roll(ar,1,axis=ax)-np.roll(ar,2,axis=ax))/(12*dx**2)
-
-   return dar
-
-##
-## Curl of a periodic array
-##
-def pcurl(arx,ary,arz,dx=1.,dy=1.,dz=1.,smth=None):
-   return pderiv(arz,dx=dy,ax=1,smth=smth)-pderiv(ary,dx=dz,ax=2,smth=smth),\
-          pderiv(arx,dx=dz,ax=2,smth=smth)-pderiv(arz,dx=dx,ax=0,smth=smth),\
-          pderiv(ary,dx=dx,ax=0,smth=smth)-pderiv(arx,dx=dy,ax=1,smth=smth)
-
-def pcurlx(ary,arz,dx=1.,dy=1.,dz=1.,smth=None):
-   return pderiv(arz,dx=dy,ax=1,smth=smth)-pderiv(ary,dx=dz,ax=2,smth=smth)
-
-def pcurly(arz,arx,dx=1.,dy=1.,dz=1.,smth=None):
-   return pderiv(arx,dx=dz,ax=2,smth=smth)-pderiv(arz,dx=dx,ax=0,smth=smth)
-
-def pcurlz(arx,ary,dx=1.,dy=1.,dz=1.,smth=None):
-   return pderiv(ary,dx=dx,ax=0,smth=smth)-pderiv(arx,dx=dy,ax=1,smth=smth)
-
-### ----------------------------------------------------------------------------------------
-###
-###  END OUTSIDE ROUTINES. WILL BE REMOVED IN THE COMPLETE PACKAGE SHARED LATER
-###
-### ----------------------------------------------------------------------------------------
-
 
    def _derivedv(self,varname):
      #import AnalysisFunctions as af
