@@ -43,4 +43,4 @@ rm -f *__genmod.*
 fi
 
 ##echo "f2py $FFTWDIR -lfftw3 -c -m faf $(\ls *.f90)"
-mv faf*.so ../lib/.
+#mv faf*.so ../lib/.
