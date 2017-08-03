@@ -37,7 +37,7 @@ fi
 if [[ "$MACH" =~ ^(cheyenne) ]]; then
 ml mpt
 ml fftw
-f2py --build-dir $SCRATCH/f2py/ --opt=-free --fcompiler=intelem --f90flags="-O3" --compiler=intelem -L/glade/p/work/tulasi/local/lib -lfftw3 -c -m fafC $(\ls *.f90)
+f2py --build-dir $SCRATCH/f2py/ --opt=-free --fcompiler=intelem --f90flags="-O3" --compiler=intelem -L/glade/p/work/tulasi/local/lib -lfftw3 -c -m faf $(\ls *.f90)
 #FFTWDIR=/glade/p/work/tulasi/local/lib
 #f2py --opt=-free --fcompiler=intelem --f90flags="-O3" --compiler=intelem -L$FFTWDIR -lfftw3 -c -m fafC $(\ls *.f90)
 #f2py --debug-capi --opt=-free --fcompiler=intelem --compiler=intelem --f90flags="-check all -g -debug all -warn all -stand f08 -traceback" -L$FFTWDIR -lfftw3 -c -m faf $(\ls *.f90)
