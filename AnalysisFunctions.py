@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy.fft as nf
 import numpy as np
+pi = np.pi
 import operator
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter as gf
@@ -10,73 +11,80 @@ if 'cheyenne' in os.uname()[1]:
 else:
    from CFLIB.lib import faf
 
-#
-# CREATE A 3D K GRID FOR FOURIER SPACE CALCULATIONS
-#
-def create_kgrid(nx,ny,nz,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
-   print lx,ly,lz
-   kx=nf.fftshift(nf.fftfreq(nx))*nx*2*np.pi/lx
-   ky=nf.fftshift(nf.fftfreq(ny))*ny*2*np.pi/ly
-   kz=nf.fftshift(nf.fftfreq(nz))*nz*2*np.pi/lz
-   mg=np.meshgrid(kx,ky,kz)
-   km=np.sqrt(mg[0]**2+mg[1]**2+mg[2]**2)
+#==================================================
 
-#  km=np.zeros((nx,ny,nz))
-#  for x in range(nx):
-#     for y in range(ny):
-#        for z in range(nz):
-#           km[x,y,z]=np.sqrt(kx[x]**2+ky[y]**2+kz[z]**2)
-   return kx,ky,kz,km
+def create_kgrid(nx, ny, nz, lx=2*pi, ly=2*pi, lz=2*pi):
+   """
+   Create a 3D k grid for Fourier space calculations
+   """
 
-##
-## FUNCTION TO FILTER A 3D ARRAY BY ZEROING OUT LARGE K VALUES
-##
-def kfilter(ar,kf,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+   print lx, ly, lz
+
+   kx = nf.fftshift(nf.fftfreq(nx))*nx*2*pi/lx
+   ky = nf.fftshift(nf.fftfreq(ny))*ny*2*pi/ly
+   kz = nf.fftshift(nf.fftfreq(nz))*nz*2*pi/lz
+  
+   mg = np.meshgrid(kx,ky,kz)
+
+   km = np.sqrt(np.sum((m**2 for m in mg)))
+
+   return kx, ky, kz, km
+
+#==================================================
+
+def kfilter(ar, kf, lx=2*pi, ly=2*pi, lz=2*pi):
+   """
+   Function to filter a 3D array by zeroing out larger k values
+   """
+
+   while len(ar.shape) < 3:
+      ar = ar.reshape(ar.shape + (1,))
+
    #  COMPUTE THE ARRAY SIZE 
-   nx=np.shape(ar)[0]; ny=np.shape(ar)[1]; nz=np.shape(ar)[2]
-   kx,ky,kz,km=create_kgrid(nx,ny,nz,lx=lx,ly=ly,lz=lz)
+   kx, ky, kz, km = create_kgrid(*ar.shape, lx=lx, ly=ly, lz=lz)
+
    #  FOURIER TRANSFORM THE ARRAY 
    far = nf.fftshift(nf.fftn(ar))
+
    #  SET VALUES ABOVE kf AS 0+0i
    far = (np.sign(km - kf) - 1.)/(-2.)*far
-  #for x in range(nx):
-  #   for y in range(ny):
-  #      for z in range(nz):
-  #         i=np.round(km[x,y,z])
-  #         if i > kf:
-  #            far[x,y,z] = np.complex(0,0)
+
    #  BACK TRANSFORM TO REAL SPACE
    arf = np.real(nf.ifftn(nf.ifftshift(far)))
    return arf
 
-##
-## Function to compute divergence in Fourier space
-##
-def kdiv(arx,ary,arz,kf=None,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+#==================================================
+
+def kdiv(arx,ary,arz,kf=None,lx=2*pi,ly=2*pi,lz=2*pi):
+   """
+   Function to compute divergence in Fourier space
+   """
+
    #  COMPUTE THE ARRAY SIZE
-   nx=np.shape(arx)[0]; ny=np.shape(arx)[1]; nz=np.shape(arx)[2]
-   kx,ky,kz,km=create_kgrid(nx,ny,nz,lx=lx,ly=ly,lz=lz)
+   kx, ky, kz, km = create_kgrid(*np.shape(arx), lx=lx, ly=ly, lz=lz)
+
    #  FOURIER TRANSFORM THE ARRAY
-   farx = nf.fftshift(nf.fftn(arx))
-   fary = nf.fftshift(nf.fftn(ary))
-   farz = nf.fftshift(nf.fftn(arz))
+   far = [nf.fftshift(nf.fftn(a)) for a in (arx, ary, arz)]
+
    # COMPUTE div=i*(kx*ax+ky*ay+kz*az)
-   mg=np.meshgrid(kx,ky,kz)
-   divarf=1j*(mg[0]*farx+mg[1]*fary+mg[2]*farz)
+   mg = np.meshgrid(kx,ky,kz)
+
+   divarf = 1.j*reduce(operator.add, [a*b for a,b in zip(mg, far)])
+
    #  SET VALUES ABOVE kf AS 0+0i if kf non zero
-   if kf is None:
-      kf=None
-   else:
+   if kf is not None:
       divarf = (np.sign(km - kf) - 1.)/(-2.)*divarf
-   divar=np.real(nf.ifftn(nf.ifftshift(divarf)))
+
+   divar = np.real(nf.ifftn(nf.ifftshift(divarf)))
+
    return divar
 
 ##
 ## DEF TO CALCULATE THE PERP SPECTRUM. 
 ##
-def PerpSpectrum(ar,sumax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
+def PerpSpectrum(ar,sumax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
    """
-      PerpSpectrum(ar,sumax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi)
+      PerpSpectrum(ar,sumax=2,lenx=2*pi,leny=2*pi,lenz=2*pi)
       ar -> Array to compute the spectrum of
       sumax -> Axis of magnetic field direction. Right now only x,y,z = 0,1,2
       lenx,leny,lenz -> System size in x,y,z directions to take into 
@@ -90,9 +98,9 @@ def PerpSpectrum(ar,sumax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
       print 'No array provided! Exiting!'
       return
    ar=ar-np.mean(ar)
-   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*np.pi/lenx)
-   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*np.pi/leny)
-   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*np.pi/lenz)
+   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
+   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*pi/leny)
+   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*pi/lenz)
   
    far = nf.fftshift(nf.fftn(ar))/(nx*ny*nz); fftea=0.5*np.abs(far)**2
    ffteb=np.sum(fftea,axis=sumax)
@@ -159,9 +167,9 @@ def fperpspecvec(arx,ary,arz,sumax=2):
 ## FORTRAN PERPENDICULAR SPECTRUM OF A VECTOR
 ## IN DOMAIN WITH VARIABLE LX, LY, LZ
 ##
-def flperpspecvec(arx,ary,arz,sumax=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+def flperpspecvec(arx,ary,arz,sumax=2,lx=2*pi,ly=2*pi,lz=2*pi):
    """
-      flperpspecvec(arx,ary,arz,sumax=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi)
+      flperpspecvec(arx,ary,arz,sumax=2,lx=2*pi,ly=2*pi,lz=2*pi)
       Computes the spectrum of a vector in a domain with variable lengths
       Uses Fortran lperpspec function
    """
@@ -182,9 +190,9 @@ def flperpspecvec(arx,ary,arz,sumax=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
 ##
 ## PERPENDICULAR SPECTRUM OF A VECTOR
 ##
-def PerpSpecVec(arx,ary,arz,sumx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+def PerpSpecVec(arx,ary,arz,sumx=2,lx=2*pi,ly=2*pi,lz=2*pi):
    """
-      PerpSpecVec(arx,ary,arz,sumx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi)
+      PerpSpecVec(arx,ary,arz,sumx=2,lx=2*pi,ly=2*pi,lz=2*pi)
       arx,ary,arz -> Components of a vector to compute the spectrum of
       sumax -> Axis of magnetic field direction. Right now only x,y,z = 0,1,2
       lenx,leny,lenz -> System size in x,y,z directions to take into 
@@ -202,9 +210,9 @@ def PerpSpecVec(arx,ary,arz,sumx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
 ##
 ## DEF TO CALCULATE 2D SPECTRUM. 
 ##
-def Spec2D(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
+def Spec2D(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
    """
-      Spec2D(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi)
+      Spec2D(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi)
       
       2D spectrum of ar perpendicular to axis ax
       
@@ -213,9 +221,9 @@ def Spec2D(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
       print 'No array provided! Exiting!'
       return
    ar=ar-np.mean(ar)
-   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*np.pi/lenx)
-   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*np.pi/leny)
-   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*np.pi/lenz)
+   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
+   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*pi/leny)
+   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*pi/lenz)
 
    if ax==0:
       k1=ky; k2=kz
@@ -231,9 +239,9 @@ def Spec2D(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
 ##
 ## 2D SPECTRUM OF A VECTOR
 ##
-def SpecVec2D(arx,ary,arz,axx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+def SpecVec2D(arx,ary,arz,axx=2,lx=2*pi,ly=2*pi,lz=2*pi):
    """
-      SpecVec2D(arx,ary,arz,axx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi)
+      SpecVec2D(arx,ary,arz,axx=2,lx=2*pi,ly=2*pi,lz=2*pi)
 
       2D spectrum of a vector perpendicular to axis ax
    """
@@ -245,9 +253,9 @@ def SpecVec2D(arx,ary,arz,axx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
 ##
 ## DEF TO CALCULATE REDUCED SPECTRUM. 
 ##
-def ReducedSpec(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
+def ReducedSpec(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
    """
-      ReducedSpec(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi)
+      ReducedSpec(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi)
       
       Reduced spectrum of ar along axis ax
       
@@ -256,9 +264,9 @@ def ReducedSpec(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
       print 'No array provided! Exiting!'
       return
    ar=ar-np.mean(ar)
-   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*np.pi/lenx)
-   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*np.pi/leny)
-   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*np.pi/lenz)
+   nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
+   ny=np.shape(ar)[1];ky=nf.fftshift(nf.fftfreq(ny))*ny*(2*pi/leny)
+   nz=np.shape(ar)[2];kz=nf.fftshift(nf.fftfreq(nz))*nz*(2*pi/lenz)
 
    if ax==0:
       # Both are one because after the first sum, the new array as dim=2
@@ -282,9 +290,9 @@ def ReducedSpec(ar,ax=2,lenx=2*np.pi,leny=2*np.pi,lenz=2*np.pi):
 ##
 ## REDUCED SPECTRUM OF A VECTOR
 ##
-def ReducedSpecVec(arx,ary,arz,axx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi):
+def ReducedSpecVec(arx,ary,arz,axx=2,lx=2*pi,ly=2*pi,lz=2*pi):
    """
-      ReducedSpecVec(arx,ary,arz,axx=2,lx=2*np.pi,ly=2*np.pi,lz=2*np.pi)
+      ReducedSpecVec(arx,ary,arz,axx=2,lx=2*pi,ly=2*pi,lz=2*pi)
 
       Reduced spectrum of a vector along axis ax
    """
@@ -418,7 +426,7 @@ def windowff(nslices,kind=""):
 
    windowff=np.zeros(nslices)
    for i in range(nslices):
-      tht = 2*np.pi*i/(nslices-1)
+      tht = 2*pi*i/(nslices-1)
       #  Hanning
       if kind.lower() == "hanning":
          windowff[i]=0.5*(1-np.cos(tht))
@@ -440,11 +448,11 @@ def windowff(nslices,kind=""):
       # Tukey
       if kind.lower() == "tukey":
          if i < int(0.1*(nslices-1)/2):
-            windowff[i] = 0.5*(1+np.cos(tht/0.1 - np.pi))
+            windowff[i] = 0.5*(1+np.cos(tht/0.1 - pi))
          if int(0.1*(nslices-1)/2) < i and i < int((nslices-1)*0.95):
             windowff[i] = 1
          if i > int((nslices-1)*0.95):
-            windowff[i] = 0.5*(1+np.cos(tht/0.1 - 2*np.pi/0.1 +np.pi))
+            windowff[i] = 0.5*(1+np.cos(tht/0.1 - 2*pi/0.1 +pi))
    return windowff
 
 #
@@ -585,7 +593,7 @@ def tfps(beta=0.6, ca=1., de2=0.000545, theta=0., kk=1.):
       Output is frequencies of the roots and the phase speeds w/k
       The roots are w[0]:Fast/Whistler, w[1]:Alfven/KAW, w[2]: Slow/Cyclotron
    """
-   tht = theta*np.pi/180.
+   tht = theta*pi/180.
    ct = np.cos(tht)
    st = np.sin(tht)
    tt = st/ct
@@ -651,7 +659,7 @@ def tfev(beta=0.6, ca=1., de2=0.000545, theta=0., k=1.,aa=0.1):
    """
    import numpy as np
    def amp(beta,de2,k,w,theta,aa):
-      th=theta*np.pi/180.
+      th=theta*pi/180.
       bb=1-w**2*(1+de2*k**2)/(k**2*np.cos(th)**2)
       sk='sin('+str(round(k,3))+'x)'
       ck='cos('+str(round(k,3))+'x)'
