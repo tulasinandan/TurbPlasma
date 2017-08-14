@@ -1,5 +1,5 @@
 #!/bin/sh
-CFLDIR=$HOME/P3D-PLASMA-PIC/p3dpy/CFLIB
+CFLDIR=$HOME/TurbPlasma/CFLIB
 LIBDIR=$CFLDIR/lib
 F90DIR=$CFLDIR/F90
 if [ ! $1 ]; then
