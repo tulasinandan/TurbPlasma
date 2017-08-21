@@ -96,6 +96,8 @@ class p3d(object):
       'omi':['omix','omiy','omiz'],'ensti':['omi'],'pali':['omi'],\
       'omex':['vey','vez'],'omey':['vex','vez'],'omez':['vex','vey'],\
       'ome':['omex','omey','omez'],'enste':['ome'],'pale':['ome'],\
+      'omx':['cmy','cmz'],'omy':['cmz','cmx'],'omz':['cmx','cmy']\
+      'om':['omx','omy','omz'], 'enst':['om'], 'pal':['om'],\
       'dui':['vix','viy','viz'],'due':['vex','vey','vez'],\
       'den':['ni','ne'],\
       'cmx':['vix','vex'],'cmy':['viy','vey'],'cmz':['viz','vez'],\
@@ -271,6 +273,11 @@ class p3d(object):
       if varname == 'cmx'   : self.cmx    = (self.vix+self.m_e*self.vex)/(1+self.m_e)
       if varname == 'cmy'   : self.cmy    = (self.viy+self.m_e*self.vey)/(1+self.m_e)
       if varname == 'cmz'   : self.cmz    = (self.viz+self.m_e*self.vez)/(1+self.m_e)
+      if varname == 'omx'   : self.omx    = af.pcurlx(self.cmy,self.cmz,dx=self.dx,dy=self.dy,dz=self.dz)
+      if varname == 'omy'   : self.omy    = af.pcurly(self.cmz,self.cmx,dx=self.dx,dy=self.dy,dz=self.dz)
+      if varname == 'omz'   : self.omz    = af.pcurlz(self.cmx,self.cmy,dx=self.dx,dy=self.dy,dz=self.dz)
+      if varname == 'om'    : pass
+      if varname == 'enst'  : self.enst   = self.omx**2+self.omy**2+self.omz**2
       if varname == 'den'   : self.den    = self.ni+self.m_e*self.ne
       if varname == 'zpx'   : self.zpx    = self.bx/np.sqrt(self.den) + self.cmx
       if varname == 'zpy'   : self.zpy    = self.by/np.sqrt(self.den) + self.cmy
@@ -286,6 +293,9 @@ class p3d(object):
       if varname == 'pale'  : 
          tmp = af.pcurl(self.omex,self.omey,self.omez,dx=self.dx,dy=self.dy,dz=self.dz)
          self.pale   = 0.5*(tmp[0]**2+tmp[1]**2+tmp[2]**2); tmp=None
+      if varname == 'pal'  : 
+         tmp = af.pcurl(self.omx,self.omy,self.omz,dx=self.dx,dy=self.dy,dz=self.dz)
+         self.pal    = 0.5*(tmp[0]**2+tmp[1]**2+tmp[2]**2); tmp=None
 ####
 #### Method to close opened files.
 ####
