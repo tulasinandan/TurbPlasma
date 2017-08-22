@@ -2,9 +2,11 @@
 import numpy.fft as nf
 import numpy as np
 pi = np.pi
+eye = 0+1j 
 import operator
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter as gf
+from numpy import newaxis as nna
 import os
 if 'cheyenne' in os.uname()[1]:
    from CFLIB.lib import fafC as faf
@@ -28,7 +30,7 @@ def create_kgrid(nx, ny, nz, lx=2*pi, ly=2*pi, lz=2*pi):
 
    km = np.sqrt(np.sum((m**2 for m in mg)))
 
-   return kx, ky, kz, km
+   return kx[:,nna,nna], ky[nna,:,nna], kz[nna,nna,:], km
 
 #==================================================
 
@@ -78,6 +80,76 @@ def kdiv(arx,ary,arz,kf=None,lx=2*pi,ly=2*pi,lz=2*pi):
    divar = np.real(nf.ifftn(nf.ifftshift(divarf)))
 
    return divar
+
+def vecpot(arx,ary,arz, kf, lx=2*np.pi, ly=2*np.pi, lz=2*np.pi):
+   """
+   Function to compute vector potential of a 3D array
+   """
+   nx,ny,nz=arx.shape
+
+   #  COMPUTE THE ARRAY SIZE
+   kx, ky, kz, km = create_kgrid(*arx.shape, lx=lx, ly=ly, lz=lz)
+  #kx, ky, kz, k2 = kx[:,nna,nna],ky[nna,:,nna],kz[nna,nna,:], km**2
+   k2=km**2
+   k2[nx/2,ny/2,nz/2]=1.
+
+   #  FOURIER TRANSFORM THE ARRAY
+   farx = nf.fftshift(nf.fftn(arx))
+   fary = nf.fftshift(nf.fftn(ary))
+   farz = nf.fftshift(nf.fftn(arz))
+
+   #  SET VALUES ABOVE kf AS 0+0i
+   farx = (np.sign(km - kf) - 1.)/(-2.)*farx
+   fary = (np.sign(km - kf) - 1.)/(-2.)*fary
+   farz = (np.sign(km - kf) - 1.)/(-2.)*farz
+
+   #  FIND THE CORRESPONDING VECTOR POTENTIAL A = -ik x B /k^2
+   axf = -eye*(ky*farz-kz*fary)/k2
+   ayf = -eye*(kz*farx-kx*farz)/k2
+   azf = -eye*(kx*fary-ky*farx)/k2
+
+   #  BACK TRANSFORM TO REAL SPACE
+   ax  = np.real(nf.ifftn(nf.ifftshift(axf)))
+   ay  = np.real(nf.ifftn(nf.ifftshift(ayf)))
+   az  = np.real(nf.ifftn(nf.ifftshift(azf)))
+   return ax,ay,az
+
+def kurl(arx,ary,arz, kf, lx=2*np.pi, ly=2*np.pi, lz=2*np.pi):
+   kx, ky, kz, km = create_kgrid(*arx.shape, lx=lx, ly=ly, lz=lz)
+   
+   #  FOURIER TRANSFORM THE ARRAY
+   farx = nf.fftshift(nf.fftn(arx))
+   fary = nf.fftshift(nf.fftn(ary))
+   farz = nf.fftshift(nf.fftn(arz))
+
+   #  SET VALUES ABOVE kf AS 0+0i
+   farx = (np.sign(km - kf) - 1.)/(-2.)*farx
+   fary = (np.sign(km - kf) - 1.)/(-2.)*fary
+   farz = (np.sign(km - kf) - 1.)/(-2.)*farz
+
+   #  COMPUTE VORTICITY
+   axf = eye*(ky*farz-kz*fary)
+   ayf = eye*(kz*farx-kx*farz)
+   azf = eye*(kx*fary-ky*farx)
+
+   #  BACK TRANSFORM TO REAL SPACE
+   wx  = np.real(nf.ifftn(nf.ifftshift(axf)))
+   wy  = np.real(nf.ifftn(nf.ifftshift(ayf)))
+   wz  = np.real(nf.ifftn(nf.ifftshift(azf)))
+   return wx,wy,wz
+
+def calc_psi_2d(bx,by,dx,dy):
+   import numpy as np
+# Calculating Psi
+   psi = np.zeros(np.shape(bx))
+   for k in range(1,np.shape(bx)[0]):
+      psi[k,0] = psi[k-1,0] + by[k,0]
+   for k in range(0,np.shape(bx)[0]):
+      for l in range(1,np.shape(bx)[1]):
+         psi[k,l] = psi[k,l-1] - bx[k,l]
+   psi=psi*dx; psi=psi-np.mean(psi)
+   return psi
+
 
 ##
 ## DEF TO CALCULATE THE PERP SPECTRUM. 

@@ -96,7 +96,7 @@ class p3d(object):
       'omi':['omix','omiy','omiz'],'ensti':['omi'],'pali':['omi'],\
       'omex':['vey','vez'],'omey':['vex','vez'],'omez':['vex','vey'],\
       'ome':['omex','omey','omez'],'enste':['ome'],'pale':['ome'],\
-      'omx':['cmy','cmz'],'omy':['cmz','cmx'],'omz':['cmx','cmy']\
+      'omx':['cmy','cmz'],'omy':['cmz','cmx'],'omz':['cmx','cmy'],\
       'om':['omx','omy','omz'], 'enst':['om'], 'pal':['om'],\
       'dui':['vix','viy','viz'],'due':['vex','vey','vez'],\
       'den':['ni','ne'],\
