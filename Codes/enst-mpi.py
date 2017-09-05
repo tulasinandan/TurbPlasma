@@ -35,7 +35,7 @@ if rank == 0:
 comm.Barrier()
 
 for it in range(rank,nt,comm.size):
-   rc.loadslice(it)
+   rc.loadslice(it,smth=nm)
    ltt =rc.time 
    lj2 =np.mean(rc.jx**2+rc.jy**2+rc.jz**2)
    lwi2=np.mean(rc.omix**2+rc.omiy**2+rc.omiz**2)
