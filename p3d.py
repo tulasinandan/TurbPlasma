@@ -333,7 +333,8 @@ class p3d(object):
       self.eef=self.eefx+self.eefy+self.eefz
       self.ee =self.eex +self.eey +self.eez
       self.edz=self.eb-self.eb0+self.eif+self.eef
-      self.tnl=self.t*np.sqrt(2*self.edz[0])*2*np.pi/self.lx
+     #self.tnl=self.t*np.sqrt(2*self.edz[0])*2*np.pi/self.lx
+      self.tnl=self.t*np.sqrt(4*self.edz[0])*2*np.pi/self.lx
       self.ltnl=self.lx/(np.sqrt(self.edz)*4*np.pi)
       self.ta=np.zeros(len(self.eb))
       for i in range(1,len(self.eb)):
