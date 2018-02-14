@@ -487,43 +487,45 @@ def normhist(ar,min=99999,max=99999,nbins=100,inc=0,ax=0):
 def kurtosis(ar):
    return np.mean(ar**4)/np.mean(ar**2)**2
 
-def windowff(nslices,kind=""):
+def windowff(nslices,kind=None):
    """
       Returns a window function to enforce quasi-preiodicity
       on an aperiodic signal. Window options are:
       BlackmanHarris, Hanning, Blackman, FlatTop, Welch, Tukey
    """
-   if len(kind) == 0:
-      kind = "blackmannharris"
 
    windowff=np.zeros(nslices)
+   
    for i in range(nslices):
       tht = 2*pi*i/(nslices-1)
+      #  No Window
+      if kind is None:
+         windowff[i]=1.
       #  Hanning
-      if kind.lower() == "hanning":
+      elif kind.lower() == "hanning":
          windowff[i]=0.5*(1-np.cos(tht))
       #  Blackman
-      if kind.lower() == "blackmann":
+      elif kind.lower() == "blackmann":
          windowff[i]=0.42659-0.49656*np.cos(tht)+0.076849*np.cos(2*tht)
       #  BlackmanHarris
-      if kind.lower() == "blackmannharris": 
+      elif kind.lower() == "blackmannharris": 
          windowff[i]=0.35875-0.48829*np.cos(tht)+0.14128*np.cos(2*tht)-0.01168*np.cos(3*tht)
       #  Flat top Window
-      if kind.lower() == "flattop": 
+      elif kind.lower() == "flattop": 
          windowff[i] = 1. - 1.93*np.cos(tht) + 1.29*np.cos(2*tht) - 0.388*np.cos(3*tht) + 0.028*np.cos(4*tht)
       #  Nuttall
-      if kind.lower() == "nuttall": 
+      elif kind.lower() == "nuttall": 
          windowff[i] = 0.355768 - 0.487396*np.cos(tht) + 0.144232*np.cos(2*tht) - 0.012604*np.cos(3*tht)
       #  Welch
-      if kind.lower() == "welch": 
+      elif kind.lower() == "welch": 
          windowff[i] = 1. - ((i - (nslices-1)/2.)/((nslices+1)/2.))**2
       # Tukey
-      if kind.lower() == "tukey":
-         if i < int(0.1*(nslices-1)/2):
+      elif kind.lower() == "tukey":
+         if i <= int(0.1*(nslices-1)/2):
             windowff[i] = 0.5*(1+np.cos(tht/0.1 - pi))
          if int(0.1*(nslices-1)/2) < i and i < int((nslices-1)*0.95):
             windowff[i] = 1
-         if i > int((nslices-1)*0.95):
+         if i >= int((nslices-1)*0.95):
             windowff[i] = 0.5*(1+np.cos(tht/0.1 - 2*pi/0.1 +pi))
    return windowff
 
