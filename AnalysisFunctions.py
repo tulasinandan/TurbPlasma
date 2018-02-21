@@ -493,41 +493,48 @@ def windowff(nslices,kind=None):
       on an aperiodic signal. Window options are:
       BlackmanHarris, Hanning, Blackman, FlatTop, Welch, Tukey
    """
+   import scipy.signal.windows as w
+   if kind is None: 
+      return np.ones(nslices)
+   elif kind.lower() == 'tukey':
+      return w.get_window((kind.lower(),0.1),nslices)
+   else:
+      return w.get_window(kind.lower(),nslices)
 
-   windowff=np.zeros(nslices)
+#  windowff=np.zeros(nslices)
    
-   for i in range(nslices):
-      tht = 2*pi*i/(nslices-1)
-      #  No Window
-      if kind is None:
-         windowff[i]=1.
-      #  Hanning
-      elif kind.lower() == "hanning":
-         windowff[i]=0.5*(1-np.cos(tht))
-      #  Blackman
-      elif kind.lower() == "blackmann":
-         windowff[i]=0.42659-0.49656*np.cos(tht)+0.076849*np.cos(2*tht)
-      #  BlackmanHarris
-      elif kind.lower() == "blackmannharris": 
-         windowff[i]=0.35875-0.48829*np.cos(tht)+0.14128*np.cos(2*tht)-0.01168*np.cos(3*tht)
-      #  Flat top Window
-      elif kind.lower() == "flattop": 
-         windowff[i] = 1. - 1.93*np.cos(tht) + 1.29*np.cos(2*tht) - 0.388*np.cos(3*tht) + 0.028*np.cos(4*tht)
-      #  Nuttall
-      elif kind.lower() == "nuttall": 
-         windowff[i] = 0.355768 - 0.487396*np.cos(tht) + 0.144232*np.cos(2*tht) - 0.012604*np.cos(3*tht)
-      #  Welch
-      elif kind.lower() == "welch": 
-         windowff[i] = 1. - ((i - (nslices-1)/2.)/((nslices+1)/2.))**2
-      # Tukey
-      elif kind.lower() == "tukey":
-         if i <= int(0.1*(nslices-1)/2):
-            windowff[i] = 0.5*(1+np.cos(tht/0.1 - pi))
-         if int(0.1*(nslices-1)/2) < i and i < int((nslices-1)*0.95):
-            windowff[i] = 1
-         if i >= int((nslices-1)*0.95):
-            windowff[i] = 0.5*(1+np.cos(tht/0.1 - 2*pi/0.1 +pi))
-   return windowff
+#  for i in range(nslices):
+#     tht = 2*pi*i/(nslices-1)
+#     #  No Window
+#     if kind is None:
+#        windowff[i]=1.
+#     #  Hanning
+#     elif kind.lower() == "hanning":
+#        windowff[i]=0.5*(1-np.cos(tht))
+#     #  Blackman
+#     elif kind.lower() == "blackmann":
+#        windowff[i]=0.42659-0.49656*np.cos(tht)+0.076849*np.cos(2*tht)
+#     #  BlackmanHarris
+#     elif kind.lower() == "blackmannharris": 
+#        windowff[i]=0.35875-0.48829*np.cos(tht)+0.14128*np.cos(2*tht)-0.01168*np.cos(3*tht)
+#     #  Flat top Window
+#     elif kind.lower() == "flattop": 
+#        windowff[i] = 1. - 1.93*np.cos(tht) + 1.29*np.cos(2*tht) - 0.388*np.cos(3*tht) + 0.028*np.cos(4*tht)
+#     #  Nuttall
+#     elif kind.lower() == "nuttall": 
+#        windowff[i] = 0.355768 - 0.487396*np.cos(tht) + 0.144232*np.cos(2*tht) - 0.012604*np.cos(3*tht)
+#     #  Welch
+#     elif kind.lower() == "welch": 
+#        windowff[i] = 1. - ((i - (nslices-1)/2.)/((nslices+1)/2.))**2
+#     # Tukey
+#     elif kind.lower() == "tukey":
+#        if i <= int(0.1*(nslices-1)/2):
+#           windowff[i] = 0.5*(1+np.cos(tht/0.1 - pi))
+#        if int(0.1*(nslices-1)/2) < i and i < int((nslices-1)*0.95):
+#           windowff[i] = 1
+#        if i >= int((nslices-1)*0.95):
+#           windowff[i] = 0.5*(1+np.cos(tht/0.1 - 2*pi/0.1 +pi))
+#  return windowff
 
 #
 # THE FOLLOWING ROUTINE CALCULATES THE SCALE DEPENDENT
