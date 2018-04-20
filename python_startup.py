@@ -1,9 +1,9 @@
 import sys
 import os
-if os.path.exists(os.environ['HOME']+'/AJGAR/TurbPlasma'):
-   sys.path.insert(0,os.environ['HOME']+'/AJGAR/TurbPlasma/')
-if os.path.exists(os.environ['HOME']+'/AJGAR/Py3D'):
-   sys.path.insert(0,os.environ['HOME']+'/AJGAR/Py3D/')
+if os.path.exists(os.environ['HOME']+'/Codes/TurbPlasma'):
+   sys.path.insert(0,os.environ['HOME']+'/Codes/TurbPlasma/')
+if os.path.exists(os.environ['HOME']+'/Codes/Py3D'):
+   sys.path.insert(0,os.environ['HOME']+'/Codes/Py3D/')
 import numpy as np
 import scipy as sp
 #import pyqtgraph as pg
