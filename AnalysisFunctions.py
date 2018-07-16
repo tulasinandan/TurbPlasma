@@ -421,7 +421,7 @@ def correlation(ar1,ar2,ax=0,dx=1.):
    corr = corr/np.mean(ar1*ar2)
    return r,corr
 
-def calc_pdf(ar,min=99999,max=99999,weight=100,inc=0,ax=0):
+def calc_pdf(ar,min=99999,max=99999,weight=100,inc=0,ax=0,Normalized=False):
    if len(ar) == 0:
       print 'No array provided! Exiting!'
       return
@@ -435,9 +435,10 @@ def calc_pdf(ar,min=99999,max=99999,weight=100,inc=0,ax=0):
    # Find the total length of data set
    arsize=reduce(operator.mul, np.shape(ar),1)
    # Find the RMS value of data set and normalize to it.
-   rmsval = np.sqrt(np.mean((ar-np.mean(ar))**2))
-   if rmsval != 0:
-      ar = ar/rmsval
+   if Normalized == True:
+      rmsval = np.sqrt(np.mean((ar-np.mean(ar))**2))
+      if rmsval != 0:
+         ar = ar/rmsval
    # Reshape the array to 1D & sort it.
    arr=np.reshape(ar,arsize)
    np.ndarray.sort(arr,kind='heapsort')
