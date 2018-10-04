@@ -186,7 +186,7 @@ class p3d(object):
       ### Byte data #########################################################
       if self.data_type == 'b':
          f.seek(timeslice*self.nx*self.ny*self.nz)
-         field = np.fromfile(f,dtype='int8',count=self.nx*self.ny*self.nz)
+         field = np.fromfile(f,dtype='uint8',count=self.nx*self.ny*self.nz)
          field = np.reshape(field,(self.nx,self.ny,self.nz),order='F')
          minmax=self.__dict__[v+'minmax'][timeslice]
          field = minmax[0]+(minmax[1]-minmax[0])*field/255.
