@@ -26,7 +26,7 @@ def create_kgrid(nx, ny, nz, lx=2*pi, ly=2*pi, lz=2*pi):
    ky = nf.fftshift(nf.fftfreq(ny))*ny*2*pi/ly
    kz = nf.fftshift(nf.fftfreq(nz))*nz*2*pi/lz
   
-   mg = np.meshgrid(kx,ky,kz)
+   mg = np.meshgrid(kx,ky,kz,indexing='ij')
 
    km = np.sqrt(np.sum((m**2 for m in mg)))
 
