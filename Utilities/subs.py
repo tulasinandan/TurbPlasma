@@ -85,7 +85,7 @@ def compute2didx(extar,slc):
    	elif y1==y2: IDX=np.s_[x1:x2,y1,z1:z2]
    	elif z1==z2: IDX=np.s_[x1:x2,y1:y2,z1]
    else:
-	IDX=np.s_[x1:x2,y1:y2]
+        IDX=np.s_[x1:x2,y1:y2]
    return IDX
 
 def compute1didx(extar,slc):

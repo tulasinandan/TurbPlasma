@@ -9,10 +9,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter as gf
 from numpy import newaxis as nna
 import os
-if 'cheyenne' in os.uname()[1]:
-   from CFLIB.lib import fafC as faf
-else:
-   from CFLIB.lib import faf
+from OLLibs import faf
 
 #==================================================
 
