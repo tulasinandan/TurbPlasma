@@ -39,9 +39,8 @@
 ###########################################################################
 
 import numpy as np
-from subprocess import getstatusoutput as syscomout
 from os.path import basename, realpath, exists
-import TurbPlasma.Analysis.AnalysisFunctions as af
+import TurbPlasma.Analysis.Simulations.AnalysisFunctions as af
 from scipy.ndimage import gaussian_filter as gf
 from TurbPlasma.Utilities.subs import calc_dep
    
