@@ -9,12 +9,12 @@ bs,fs,step=ask_for_steps(rc.numslices)
 nt=(fs-bs)/step
 
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    kk,ekbx,ekby,ekbz,ekb=af.fperpspecvec(rc.bx,rc.by,rc.bz)
    outf=open('perpspec-'+rc.dirname+'-%03d.dat'%it,'w')
    for i in range(len(kk)):
-      print >> outf,kk[i],ekbx[i],ekby[i],ekbz[i],ekb[i]
+      print(kk[i],ekbx[i],ekby[i],ekbz[i],ekb[i], file=outf)
    outf.close()
 
 rc.fin()

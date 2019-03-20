@@ -67,7 +67,7 @@ class spc(object):
    def __init__(self,shelldirname=None):
       # If no rundir specified
       if shelldirname is None: 
-         shelldirname = raw_input('Please enter the rundir: ') 
+         shelldirname = input('Please enter the rundir: ') 
       self.rundir = realpath(shelldirname)
       self.dirname= basename(self.rundir)
       self.primitives=['ax','ay','az','vx','vy','vz']
@@ -164,8 +164,8 @@ class spc(object):
               for i in self.derived[current]:
                 if i not in v2l:
                   v2l.append(i)
-            elif current not in self.primitives+self.derived.keys():
-              print current+' not implemented. Implement it!'
+            elif current not in self.primitives+list(self.derived.keys()):
+              print(current+' not implemented. Implement it!')
       for i in v2lu:
         if i in self.derived: 
           for j in self.derived[i]:
@@ -209,11 +209,11 @@ class spc(object):
 
          for j in self.primitives:
             self.__dict__[j+'c'][:,:,i*ih[2]:(i+1)*ih[2]]=d[j]
-      print 'Loaded primitives in Fourier Space'
+      print('Loaded primitives in Fourier Space')
 
       for i in self.primitives:
          self.__dict__[i] = np.fft.irfftn(self.__dict__[i+'c'].T)
-      print 'Transformed primitives to real space'
+      print('Transformed primitives to real space')
       
       for i in self.vars2l:
          if i in self.derived:

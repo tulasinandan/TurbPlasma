@@ -19,7 +19,7 @@ def maxkurtseries(rc,it=0.,ft=.1,stept=1,bl=0.2,fl=5.,stepl=1):
    tsris=np.zeros((fst-bst)/stept)
 
    for it in range(bst,fst,stept):
-      print it
+      print(it)
       #Find the appropriate index for movie
       idx = (it-bst)/stept
 
@@ -58,6 +58,6 @@ if __name__ == "__main__":
    tim,scl,krtmx,avgkrt=maxkurtseries(rc,it=0.,ft=5.,stept=2)
    ofl=open('maxkurtdi.'+rc.dirname+'.dat','w')
    for i in range(len(scl)):
-      print >> ofl, tim,scl[i],krtmx[i]
+      print(tim,scl[i],krtmx[i], file=ofl)
    ofl.close()
-   print avgkrt
+   print(avgkrt)

@@ -29,7 +29,7 @@ def zpzmlclm(rc):
       zmkzt = np.zeros((rc.nx/2,nt))
    
    for it in range(bs,fs,step):
-      print 'time slice',it
+      print('time slice',it)
       rc.loadslice(it)
       idx=(it-bs)/step
       rho=rc.ni+rc.ne*rc.m_e
@@ -71,9 +71,9 @@ def zpzmlclm(rc):
 
    
    outf=open('zpzmlc.'+rc.dirname+'.dat','w')
-   print >> outf, '#','t','tt','ezp','ezm','lcp','lcm','tnldi'
+   print('#','t','tt','ezp','ezm','lcp','lcm','tnldi', file=outf)
    for i in range(nt):
-      print >> outf, tt[i],tt[i]*2*np.pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i],tnldi[i]
+      print(tt[i],tt[i]*2*np.pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i],tnldi[i], file=outf)
    outf.close()
    
    rc.fin()

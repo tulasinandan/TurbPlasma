@@ -39,7 +39,7 @@
 ###########################################################################
 
 from pylab import *
-from commands import getstatusoutput as syscomout
+from subprocess import getstatusoutput as syscomout
 from os.path import expandvars as opexp
    
 class f3d(object):
@@ -51,11 +51,11 @@ class f3d(object):
    def __init__(self,shelldirname="",data_type=""):
 # If no rundir specified
       if len(shelldirname) == 0: # Start init prompt
-         shelldirname = raw_input('Please enter the rundir: ') 
+         shelldirname = input('Please enter the rundir: ') 
       self.rundir = opexp(shelldirname)
 # If data type not specified
       if len(data_type) == 0:
-         self.data_type=raw_input("Data Type? [(b)yte/ (d)ouble precision] ")
+         self.data_type=input("Data Type? [(b)yte/ (d)ouble precision] ")
       else:
          self.data_type = data_type
 # Parameters to load
@@ -68,9 +68,9 @@ class f3d(object):
       for i in range(len(self.readparams)):
          comm="awk '/^ "+self.readparams[i]+" / {print $3}' "+self.rundir+"/paramfile"
          if syscomout(comm)[1].endswith(','):
-            print self.params[i], '=', float(syscomout(comm)[1][:-1])
+            print(self.params[i], '=', float(syscomout(comm)[1][:-1]))
          else:
-            print self.params[i], '=', float(syscomout(comm)[1])
+            print(self.params[i], '=', float(syscomout(comm)[1]))
          if syscomout("grep "+self.readparams[i]+" "+self.rundir+"/paramfile")[0] == 0:
             if syscomout(comm)[1].endswith(','):
                exec('self.'+self.params[i]+'=float(syscomout(comm)[1][:-1])')
@@ -189,4 +189,4 @@ class f3d(object):
 #### Load energies for the run
 ####
    def loadenergies(self):
-      print 'NEED TO IMPLEMENT IT'
+      print('NEED TO IMPLEMENT IT')

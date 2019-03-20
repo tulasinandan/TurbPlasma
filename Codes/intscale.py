@@ -8,7 +8,7 @@ ofile=open('intscale.'+rc.dirname+'.dat','w')
 ie=1/np.e
 bs,fs,step=ask_for_steps(rc.numslices)
 for i in range(bs,fs,step):
-   print i
+   print(i)
    rc.loadslice(i)
    rx,bxcor=fcorr(rc.bx,rc.bx,ax=0,dx=rc.dx)
 #  lxc=rx[abs(bxcor-ie).argmin()]
@@ -17,5 +17,5 @@ for i in range(bs,fs,step):
 #  lyc=ry[abs(bycor-ie).argmin()]
    lyint=np.sum(bycor)*rc.dy
 
-   print >> ofile,rc.time,lxint,lyint,0.5*(lxint+lyint)
+   print(rc.time,lxint,lyint,0.5*(lxint+lyint), file=ofile)
 ofile.close()

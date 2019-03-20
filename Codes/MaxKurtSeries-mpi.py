@@ -32,9 +32,9 @@ if rank==0:
 else:
    bs=extslc+rank*nt; fs=bs+nt
 
-print rank, bs, fs, nt
-print 
-print
+print(rank, bs, fs, nt)
+print() 
+print()
 #
 # CREATE OUTPUT ARRAYS
 #
@@ -77,11 +77,11 @@ for i in range(bs,fs):
    if rank == 0:
       sclmx[i]=rr[xx]
       krtmx[i]=tsdk[xx]
-      print 'rank,t,sclmx,mxkurt\t',rank,tsris[i],sclmx[i],krtmx[i]
+      print('rank,t,sclmx,mxkurt\t',rank,tsris[i],sclmx[i],krtmx[i])
    else:
       snddata[1,idx]=rr[xx]
       snddata[2,idx]=tsdk[xx]
-      print 'rank,t,sclmx,mxkurt\t',rank,snddata[0,idx],snddata[1,idx],snddata[2,idx]
+      print('rank,t,sclmx,mxkurt\t',rank,snddata[0,idx],snddata[1,idx],snddata[2,idx])
 
 
 #
@@ -101,12 +101,12 @@ else:
 comm.Barrier()
 #
 if rank == 0:
-   print 'Done Computing. Writing the file now'
+   print('Done Computing. Writing the file now')
    outf=open('mxkurtdi.'+rc.dirname+'.dat','w')
-   print >> outf, '#','t,\t tt,\t lxc,\t lyc,\t lc'
+   print('#','t,\t tt,\t lxc,\t lyc,\t lc', file=outf)
    for i in range(rc.numslices):
-      print >> outf, tsris[i],sclmx[i],krtmx[i]
+      print(tsris[i],sclmx[i],krtmx[i], file=outf)
    outf.close()
    t_fin = MPI.Wtime()-t_start
-   print 'Total time taken %0.3f'%t_fin
+   print('Total time taken %0.3f'%t_fin)
 #

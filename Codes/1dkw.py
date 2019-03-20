@@ -5,9 +5,9 @@ rc = create_object()
 
 rc.vars2load(['bx','by','bz','n'])
 
-recalc=raw_input('Recalculate spectra? ')
+recalc=input('Recalculate spectra? ')
 if (recalc == 'y'):
-   print ''; print ''
+   print(''); print('')
    bs,fs,step=ask_for_steps(rc.numslices)
    nslices=fs-bs
    windowff=np.zeros(nslices)

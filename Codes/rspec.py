@@ -15,7 +15,7 @@ ybx=np.zeros(rc.ny/2)
 yby=np.zeros(rc.ny/2)
 ybz=np.zeros(rc.ny/2)
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
 
    kx,xkx,xky,xkz,xkb = af.ReducedSpecVec(rc.bx,rc.by,rc.bz,lenx=rc.lx,ax=0)
@@ -33,11 +33,11 @@ yby=yby*float(step)/float(fs-bs)
 ybx=ybx*float(step)/float(fs-bs)
 outf=open('rxspec.'+rc.dirname+'.dat','w')
 for i in range(len(kx)):
-   print >> outf, kx[i],xbx[i],xby[i],xbz[i],xbx[i]+xby[i]+xbz[i] 
+   print(kx[i],xbx[i],xby[i],xbz[i],xbx[i]+xby[i]+xbz[i], file=outf) 
 outf.close()
 outf=open('ryspec.'+rc.dirname+'.dat','w')
 for i in range(len(ky)):
-   print >> outf, ky[i],ybx[i],yby[i],ybz[i],ybx[i]+yby[i]+ybz[i] 
+   print(ky[i],ybx[i],yby[i],ybz[i],ybx[i]+yby[i]+ybz[i], file=outf) 
 outf.close()
 
 rc.fin()

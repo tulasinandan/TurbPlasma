@@ -3,7 +3,7 @@ from pylab import *
 from p3d import p3d
 from os.path import basename
 if len(sys.argv) == 1:
-   rdir=raw_input("Physics directory, thermal directory, code_type, data_type: ")
+   rdir=input("Physics directory, thermal directory, code_type, data_type: ")
 else:
    rdir=sys.argv[1]
 foo = []

@@ -39,7 +39,7 @@
 ###########################################################################
 
 import numpy as np
-from commands import getstatusoutput as syscomout
+from subprocess import getstatusoutput as syscomout
 from os.path import basename, realpath, exists
 import AnalysisFunctions as af
 from scipy.ndimage import gaussian_filter as gf
@@ -56,13 +56,13 @@ class p3d(object):
    def __init__(self,shelldirname=None,filenum=None):
       # If no rundir specified
       if shelldirname is None: 
-         shelldirname = raw_input('Please enter the rundir: ') 
+         shelldirname = input('Please enter the rundir: ') 
       self.rundir = realpath(shelldirname)
       self.dirname= basename(self.rundir)
 
       # If filenum not given
       if filenum is None:
-         self.filenum=raw_input("Please enter the file number to load (e.g. 000): ")
+         self.filenum=input("Please enter the file number to load (e.g. 000): ")
       else:
          self.filenum=filenum
 
@@ -77,7 +77,7 @@ class p3d(object):
          raise ValueError('Paramfile not found in '+self.dirname)
       # load parameters
       self.params=loadparams(self.paramfile)
-      for i in self.params.keys():
+      for i in list(self.params.keys()):
          self.__dict__[i]=self.params[i]
 
       self.primitives=['bx','by','bz','ex','ey','ez','jix','jiy','jiz','jex','jey'\
@@ -106,7 +106,7 @@ class p3d(object):
       'zpzm':['zpx','zpy','zpz','zmx','zmy','zmz']\
       }
 
-      self.allvars=self.primitives+self.derived.keys()
+      self.allvars=self.primitives+list(self.derived.keys())
 
 
 ####
@@ -117,8 +117,8 @@ class p3d(object):
          A quick method to print the parameters and variables attached with
          the p3d run object.
       """
-      for i in self.params.keys():
-         print i,' = ',self.params[i]
+      for i in list(self.params.keys()):
+         print(i,' = ',self.params[i])
 ####
 #### Method to define the variables to load, create variables and
 #### open corresponding files.
@@ -145,10 +145,10 @@ class p3d(object):
       # If byte or double byte data, open the log file.
       if self.data_type in ("b", "bb"):
          if exists(self.rundir+'/log'):
-            print self.rundir+'/log'
+            print(self.rundir+'/log')
             self.logfile=open(self.rundir+"/log","r")
          else:
-            print self.rundir+'/staging/movie.log.'+self.filenum
+            print(self.rundir+'/staging/movie.log.'+self.filenum)
             self.logfile=open(self.rundir+"/staging/movie.log."+self.filenum,"r")
          self.szl=np.size(self.logvars)
          self.alllogvals=np.loadtxt(self.logfile)
@@ -235,7 +235,7 @@ class p3d(object):
 ####
    def addattr(self,key,val):
       for i in key:
-         print 'Adding '+i 
+         print('Adding '+i) 
          self.__dict__[i]=val[key.index(i)]
          if isinstance(val[key.index(i)],np.ndarray):
             self.mmd[i]=[self.__dict__[i].min(),self.__dict__[i].max()]
@@ -408,11 +408,11 @@ def loadparams(paramfile):
       'ne', 'jex','jey','jez', 'pexx','peyy','pezz','pexy','peyz','pexz',
       'ni', 'jix','jiy','jiz', 'pixx','piyy','pizz','pixy','piyz','pixz']
    else:
-      print     '='*80 + \
+      print('='*80 + \
                 '\t This particular moive headder has not been coded!\n'\
                 '\t Talk to Tulasi to fit it, or fix it yourself.\n'\
                 '\t I dont care, Im a computer not a cop'\
-                '='*80
+                '='*80)
    #
    #
    # Derive some others

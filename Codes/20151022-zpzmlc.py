@@ -26,7 +26,7 @@ lcp=np.zeros(nt); lcm=np.zeros(nt)
 #zmkzt = np.zeros((rc.nx/2,nt))
 
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    rho=rc.ni+rc.ne*rc.m_e
    rc.jix=rc.jix/rc.ni; rc.jiy=rc.jiy/rc.ni;rc.jiz=rc.jiz/rc.ni
@@ -75,9 +75,9 @@ for it in range(bs,fs,step):
    tt[(it-bs)/step]=round(it*rc.movieout_full,4)
 
 outf=open('zpzmlc.'+rc.dirname+'.dat','w')
-print >> outf, '#','t','tt','ezp','ezm','lcp','lcm'
+print('#','t','tt','ezp','ezm','lcp','lcm', file=outf)
 for i in range(nt):
-   print >> outf, tt[i],tt[i]*2*pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i]
+   print(tt[i],tt[i]*2*pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i], file=outf)
 outf.close()
 
 rc.fin()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy.fft as nf
 import numpy as np
+from functools import reduce
 pi = np.pi
 eye = 0+1j 
 import operator
@@ -20,7 +21,7 @@ def create_kgrid(nx, ny, nz, lx=2*pi, ly=2*pi, lz=2*pi):
    Create a 3D k grid for Fourier space calculations
    """
 
-   print lx, ly, lz
+   print(lx, ly, lz)
 
    kx = nf.fftshift(nf.fftfreq(nx))*nx*2*pi/lx
    ky = nf.fftshift(nf.fftfreq(ny))*ny*2*pi/ly
@@ -167,7 +168,7 @@ def PerpSpectrum(ar,sumax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
       fekp -> Spectrum of the array
    """
    if len(ar) == 0:
-      print 'No array provided! Exiting!'
+      print('No array provided! Exiting!')
       return
    ar=ar-np.mean(ar)
    nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
@@ -290,7 +291,7 @@ def Spec2D(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
       
    """
    if len(ar) == 0:
-      print 'No array provided! Exiting!'
+      print('No array provided! Exiting!')
       return
    ar=ar-np.mean(ar)
    nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
@@ -333,7 +334,7 @@ def ReducedSpec(ar,ax=2,lenx=2*pi,leny=2*pi,lenz=2*pi):
       
    """
    if len(ar) == 0:
-      print 'No array provided! Exiting!'
+      print('No array provided! Exiting!')
       return
    ar=ar-np.mean(ar)
    nx=np.shape(ar)[0];kx=nf.fftshift(nf.fftfreq(nx))*nx*(2*pi/lenx)
@@ -423,7 +424,7 @@ def correlation(ar1,ar2,ax=0,dx=1.):
 
 def calc_pdf(ar,min=99999,max=99999,weight=100,inc=0,ax=0,Normalized=False):
    if len(ar) == 0:
-      print 'No array provided! Exiting!'
+      print('No array provided! Exiting!')
       return
    if min == 99999:
       min=ar.min()
@@ -454,7 +455,7 @@ def calc_pdf(ar,min=99999,max=99999,weight=100,inc=0,ax=0,Normalized=False):
 
 def normhist(ar,min=99999,max=99999,nbins=100,inc=0,ax=0):
    if len(ar) == 0:
-      print 'No array provided! Exiting!'
+      print('No array provided! Exiting!')
       return
    # If PDF of increment, then increment the array
    if inc > 0:
@@ -641,13 +642,13 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
     try:
         window_size = np.abs(np.int(window_size))
         order = np.abs(np.int(order))
-    except ValueError, msg:
+    except ValueError as msg:
         raise ValueError("window_size and order have to be of type int")
     if window_size % 2 != 1 or window_size < 1:
         raise TypeError("window_size size must be a positive odd number")
     if window_size < order + 2:
         raise TypeError("window_size is too small for the polynomials order")
-    order_range = range(order+1)
+    order_range = list(range(order+1))
     half_window = (window_size -1) // 2
     # precompute coefficients
     b = np.mat([[k**i for i in order_range] for k in range(-half_window, half_window+1)])
@@ -724,9 +725,9 @@ def tfst(beta=0.6, ca=1., de2=0.000545, theta=0., kmin=1e-2, kmax=10., npoints=2
    plt.show()
    if wrt == 'y':
       ofile=open('disp'+str(theta)+'.dat','w')
-      print>> ofile,'#  k', 'Acoustic', 'Alfven', 'Fast'
+      print('#  k', 'Acoustic', 'Alfven', 'Fast', file=ofile)
       for i in range(npoints):
-         print>> ofile, kk[i],warray[2,i],warray[1,i],warray[0,i]
+         print(kk[i],warray[2,i],warray[1,i],warray[0,i], file=ofile)
       ofile.close()
 
 def tfev(beta=0.6, ca=1., de2=0.000545, theta=0., k=1.,aa=0.1):
@@ -756,16 +757,16 @@ def tfev(beta=0.6, ca=1., de2=0.000545, theta=0., k=1.,aa=0.1):
             '\t n = '+st((k*np.cos(th)/w)*aa*k*bb*np.sin(2*th)/(w**2-beta*k**2))+sk
    f,s=tfps(beta,ca,de2,theta,k)
 #     The roots are w[0]:Fast/Whistler, w[1]:Alfven/KAW, w[2]: Slow/Cyclotron
-   print 'Fast/ Whistler'
-   print amp(beta,de2,k,f[0],theta,aa)
-   print '##################'
-   print
-   print 'Alfven/ KAW'
-   print amp(beta,de2,k,f[1],theta,aa)
-   print '##################'
-   print
-   print 'Slow/ Cyclotron'
-   print amp(beta,de2,k,f[2],theta,aa)
+   print('Fast/ Whistler')
+   print(amp(beta,de2,k,f[0],theta,aa))
+   print('##################')
+   print()
+   print('Alfven/ KAW')
+   print(amp(beta,de2,k,f[1],theta,aa))
+   print('##################')
+   print()
+   print('Slow/ Cyclotron')
+   print(amp(beta,de2,k,f[2],theta,aa))
    
 
 ##

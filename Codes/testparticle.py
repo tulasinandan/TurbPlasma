@@ -101,9 +101,9 @@ class TPRun:
         # checks the time interval is well defined 
         #----------------------------------------------------------------------
         if t0 < self.tstart or t0 > self.tend:
-            print 'time (%5.3f) should be between tstart(%5.3f)\
+            print('time (%5.3f) should be between tstart(%5.3f)\
                    and tend(%5.3f) (both included)' \
-                   % (t0 ,self.tstart,self.tend)
+                   % (t0 ,self.tstart,self.tend))
 
             return None
         #----------------------------------------------------------------------
@@ -245,9 +245,9 @@ class TPRun:
 
         # the following function will move all the particles
         # for all time steps
-        print 'calling _moveall'
+        print('calling _moveall')
         self._moveall()
-        print 'calling _pfields'
+        print('calling _pfields')
         self._pfields()
 
 
@@ -346,7 +346,7 @@ class TPRun:
         xc = self._CR['xx'][0]-self._dx/2.
         yc = self._CR['yy'][0]-self._dy/2.
 
-        print 
+        print() 
 
         func(self.r,
              self._E,
@@ -466,7 +466,7 @@ class TPRun:
         Creation : 2013-05-01 11:21:19.671182
 
         """
-        print 'Loading particles in a spatially uniform random distribution...'
+        print('Loading particles in a spatially uniform random distribution...')
 
         self._r0  = np.zeros((3, self._npart))
 
@@ -518,7 +518,7 @@ class TPRun:
         Creation : 2013-05-01 11:21:19.671182
 
         """
-        print 'Loading particles in a spatially uniform random distribution...'
+        print('Loading particles in a spatially uniform random distribution...')
 
         self._r0  = np.zeros((3, self._npart))
 
@@ -572,7 +572,7 @@ class TPRun:
         Creation : 2013-05-01 11:21:19.671182
 
         """
-        print 'Loading particles in a spatially gaussian random distribution...'
+        print('Loading particles in a spatially gaussian random distribution...')
 
         self._r0  = np.zeros((3, self._npart))
 

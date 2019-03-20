@@ -17,14 +17,14 @@ from subs import *
 
 rc = create_object()
 
-variables=raw_input("Variables to load, e.g. all, min, bx by bz: ").split()
+variables=input("Variables to load, e.g. all, min, bx by bz: ").split()
 rc.vars2load(variables)
 rcd=rc.__dict__
 
-movieout = raw_input('Output (m)ovies or (s)how plots? [default: s]: ')
+movieout = input('Output (m)ovies or (s)how plots? [default: s]: ')
 if movieout == '':
    movieout = 's'
-cmp = raw_input("cmap? e.g. gray,seismic,RdBu,jet,hot,spectral,hot_r etc. [default RdBu]: ")
+cmp = input("cmap? e.g. gray,seismic,RdBu,jet,hot,spectral,hot_r etc. [default RdBu]: ")
 if cmp == '':
    cmp = 'RdBu'
 
@@ -41,7 +41,7 @@ figtitle=f.suptitle('Multiplots')
 
 # Loop for plottting multiple time slices
 for it in range(bs,fs,step):
-   print 'Reading time slice ', it
+   print('Reading time slice ', it)
    rc.loadslice(it)
 
    for j in rc.vars2l:
@@ -63,10 +63,10 @@ for it in range(bs,fs,step):
    if movieout == 's':
       f.show()
       draw()
-      haha=raw_input('Hello?')
+      haha=input('Hello?')
    elif movieout == 'm':
       imagefilename='movie.%04d.'% it
       savefig(imagefilename+rc.dirname+'.png',bbox_inches='tight')
    else:
-      print 'Please make a valid choice'
+      print('Please make a valid choice')
 rc.fin()

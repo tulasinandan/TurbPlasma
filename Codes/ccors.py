@@ -1,16 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import AnalysisFunctions as af
-lddata=raw_input('Load Data again? ')
+lddata=input('Load Data again? ')
 if lddata == 'y':
    from subs import create_object
    rc=create_object()
    rc.vars2load(['all'])
    rcd=rc.__dict__
    rc.loadenergies()
-   nltime=np.float(raw_input("What nonlinear time? "))
+   nltime=np.float(input("What nonlinear time? "))
    slc=np.int(rc.t[np.argmin(np.abs(rc.ta-nltime))]/rc.dtmovie)
-   smt=float(raw_input("How smooth? "))
+   smt=float(input("How smooth? "))
    rc.loadslice(slc,smth=smt)
    rc.computevars(['tempi','omi','tempe','ome'])
    rc.addattr(['Ap','dti','tite','dte'],[0.5*(rc.tix+rc.tiy)/rc.tiz,rc.ti-np.mean(rc.ti),rc.ti*rc.T_e/(rc.te*rc.T_i),rc.te-np.mean(rc.te)])
@@ -47,14 +47,14 @@ def plot_cor(a,b,nama,namb):
 
 #lst = ['omzi','jz','dti','dAp','dtite','omze','dte']
 #lst = ['omzi','jz','dti','dAp']
-lst=raw_input("What variables to compute correlations for? ").split()
+lst=input("What variables to compute correlations for? ").split()
 from itertools import combinations 
 l=list(combinations(lst,2)); sz=len(l)
 
 d = {}
 for i in range(sz):
    a = l[i][0]; b = l[i][1]
-   print 'Computing correlations for',a,b, '...'
+   print('Computing correlations for',a,b, '...')
    rs,d['c-'+a+'s-'+b+'s'] = correlation(rcd[a],rcd[b])
    rs,d['c-'+a+'s-'+b+'u'] = correlation(rcd[a],np.abs(rcd[b]))
    rs,d['c-'+a+'u-'+b+'s'] = correlation(np.abs(rcd[a]),rcd[b])

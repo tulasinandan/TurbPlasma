@@ -9,7 +9,7 @@ def lccor(rc,bs=0,fs=1,step=1,kind='int'):
    lyc = np.zeros((fs-bs)/step)
    lc  = np.zeros((fs-bs)/step)
    for i in range(bs,fs,step):
-      print i; idx = (i-bs)/step
+      print(i); idx = (i-bs)/step
       rc.loadslice(i); 
       tt[idx] = rc.time
       rx,bxcor=fcorr(rc.bx,rc.bx,ax=0,dx=rc.dx)
@@ -21,7 +21,7 @@ def lccor(rc,bs=0,fs=1,step=1,kind='int'):
          lxc[idx]=np.sum(bxcor)*rc.dx
          lyc[idx]=np.sum(bycor)*rc.dy
       lc[idx] = 0.5*(lxc[idx]+lyc[idx])
-      print tt[idx],lxc[idx],lyc[idx],lc[idx]
+      print(tt[idx],lxc[idx],lyc[idx],lc[idx])
    return tt,lxc,lyc,lc
 
 if __name__ == '__main__':
@@ -29,10 +29,10 @@ if __name__ == '__main__':
    rc=create_object()
    rc.vars2load(['bx','by','bz'])
    bs,fs,steps=ask_for_steps(rc.numslices)
-   kind=raw_input("Integral scale ('int') or 1/e scale ('ie')? ")
+   kind=input("Integral scale ('int') or 1/e scale ('ie')? ")
    tt,lxc,lyc,lc = lccor(rc,bs,fs,step,kind=kind)
    
    ofile=open('acorl.'+rc.dirname+'.dat','w')
    for i in range(len(lxc)):
-      print >> ofile,tt[i],lxc[i],lyc[i],lc[i]
+      print(tt[i],lxc[i],lyc[i],lc[i], file=ofile)
    ofile.close()

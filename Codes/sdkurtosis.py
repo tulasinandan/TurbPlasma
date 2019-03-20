@@ -14,7 +14,7 @@ bzk=np.zeros(rc.nx/2)
 xk = np.arange(rc.nx/2)*rc.dx
 
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    bxk = bxk + af.fsdk(rc.bx)[1]
    byk = byk + af.fsdk(rc.by)[1]
@@ -24,7 +24,7 @@ bxk=bxk/nt; byk=byk/nt; bzk=bzk/nt
 
 outf=open('sdkurtosis.'+rc.dirname+'.dat','w')
 for i in range(rc.nx/2):
-   print >> outf,xk[i],bxk[i],byk[i],bzk[i] 
+   print(xk[i],bxk[i],byk[i],bzk[i], file=outf) 
 outf.close()
 
 rc.fin()

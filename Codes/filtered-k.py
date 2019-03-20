@@ -25,7 +25,7 @@ dk=abs(kp[rc.nx/2,1]-kp[rc.nx/2,0])
 kde=int(round(rc.lx/(sqrt(rc.m_e)*2*pi)))
 
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    fbx = fftshift(fftn(rc.bx[:,:,0]))
    fby = fftshift(fftn(rc.by[:,:,0]))
@@ -48,6 +48,6 @@ bxk=bxk/nt; byk=byk/nt; bzk=bzk/nt
 
 outf=open('filtered-sdk.'+rc.dirname+'.dat','w')
 for i in range(rc.nx/2):
-   print >> outf,xk[i],bxk[i],byk[i],bzk[i] 
+   print(xk[i],bxk[i],byk[i],bzk[i], file=outf) 
 outf.close()
 rc.fin()

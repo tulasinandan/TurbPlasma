@@ -23,9 +23,9 @@ wy=np.zeros((rc.nx,rc.ny,rc.nz),dtype=complex)
 wz=np.zeros((rc.nx,rc.ny,rc.nz),dtype=complex)
 
 outf=open('AW2.'+rc.dirname+'.dat','w')
-print >> outf, 't[it],\t tt[it],\t eb,\t az2,\t ev,\t wz2,\t eb+ev-az2-wz2'
+print('t[it],\t tt[it],\t eb,\t az2,\t ev,\t wz2,\t eb+ev-az2-wz2', file=outf)
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    # FOURIER TRANSFORM THE MAGNETIC FIELD FLUCTUATIONS
    bx=rc.bx-np.mean(rc.bx); fbx=nf.fftshift(nf.fftn(bx))/(rc.nx*rc.ny*rc.nz)
@@ -63,7 +63,7 @@ for it in range(bs,fs,step):
    az2=kminsq*np.sum(asq)*0.5
    wz2=np.sum(wsq)*0.5
    
-   print >> outf, t[it], tt[it], eb, az2, ev, wz2, eb+ev-az2-wz2
+   print(t[it], tt[it], eb, az2, ev, wz2, eb+ev-az2-wz2, file=outf)
 
 outf.close()
 rc.fin()

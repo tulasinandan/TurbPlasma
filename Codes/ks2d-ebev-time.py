@@ -10,7 +10,7 @@ rcd=rc.__dict__
 bs,fs,step=ask_for_steps(rc.numslices)
 nt=(fs-bs)/step
 
-cut=raw_input(" What part of domain? Enter nothing for whole domain")
+cut=input(" What part of domain? Enter nothing for whole domain")
 if cut=='':
    cut=None
 else:
@@ -19,7 +19,7 @@ else:
    cut[2]=float(cut[2]); cut[3]=float(cut[3])
 
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    rc.computevars(['vi'])
    k1,k2,ekx,eky,ekz,ekb=af.SpecVec2D(rc.bx,rc.by,rc.bz,axx=2,lx=rc.lx,ly=rc.ly,lz=rc.lz)

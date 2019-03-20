@@ -43,7 +43,7 @@ for it in range(rank,nt,comm.size):
    lPi =np.mean(rc.pali)
    lPe =np.mean(rc.pale)
 ## PRINT TO STDOUT FOR RECAPTURE IF THE RUN CRASHES
-   print ltt,ltt*2*np.pi/rc.lx,lj2,lwi2,lwe2,lPi,lPe
+   print(ltt,ltt*2*np.pi/rc.lx,lj2,lwi2,lwe2,lPi,lPe)
 
    if rank == 0:
       tt[ it] = ltt
@@ -66,14 +66,14 @@ for it in range(rank,nt,comm.size):
          we2[rcvdata[0]] = rcvdata[4]
          Pi[ rcvdata[0]] = rcvdata[5]
          Pe[ rcvdata[0]] = rcvdata[6]
-   print 'Done time slice ',it,' on proc ',rank
+   print('Done time slice ',it,' on proc ',rank)
 comm.Barrier()
 
 if rank == 0:
    ofl=open('enst.'+rc.dirname+'.dat','w')
-   print >>ofl,'# Time\t tnl\t j^2\t wi^2\t we^2\t Pi\t Pe'
+   print('# Time\t tnl\t j^2\t wi^2\t we^2\t Pi\t Pe', file=ofl)
    for i in range(nt):
-      print >> ofl, tt[i], tt[i]*2*np.pi/rc.lx, j2[i], wi2[i], we2[i], Pi[i], Pe[i]
+      print(tt[i], tt[i]*2*np.pi/rc.lx, j2[i], wi2[i], we2[i], Pi[i], Pe[i], file=ofl)
    t_fin = MPI.Wtime()-t_start
-   print 'Total time taken %0.3f'%t_fin
+   print('Total time taken %0.3f'%t_fin)
 

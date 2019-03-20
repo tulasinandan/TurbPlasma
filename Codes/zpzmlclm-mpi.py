@@ -22,7 +22,7 @@ comm.Barrier()
 nt=rc.numslices-rc.numslices%size
 ie=1/np.e
 if rank == 0:
-   print 'NUMBER OF SLICES ',nt
+   print('NUMBER OF SLICES ',nt)
    t_start=MPI.Wtime()
    tt =np.zeros(nt)
    ezp=np.zeros(nt) 
@@ -65,7 +65,7 @@ for it in range(rank,nt,comm.size):
    ltt = round(it*rc.dtmovie,4)
 
 ## PRINT TO STDOUT FOR RECAPTURE IF THE RUN CRASHES
-   print ltt,ltt*2*np.pi/rc.lx,lezp,lezm,llcp,llcm
+   print(ltt,ltt*2*np.pi/rc.lx,lezp,lezm,llcp,llcm)
 
    if rank == 0:
       tt[ it] = ltt
@@ -86,18 +86,18 @@ for it in range(rank,nt,comm.size):
          ezm[rcvdata[0]] = rcvdata[3]
          lcp[rcvdata[0]] = rcvdata[4]
          lcm[rcvdata[0]] = rcvdata[5]
-   print 'Done time slice ',it,' on proc ',rank
+   print('Done time slice ',it,' on proc ',rank)
 comm.Barrier()
 
 if rank == 0:
-   print 'Done Computing. Writing the file now'
+   print('Done Computing. Writing the file now')
    outf=open('zpzmlc.'+rc.dirname+'.dat','w')
-   print >> outf, '#','t','tt','ezp','ezm','lcp','lcm'
+   print('#','t','tt','ezp','ezm','lcp','lcm', file=outf)
    for i in range(nt):
-      print >> outf, tt[i],tt[i]*2*np.pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i]
+      print(tt[i],tt[i]*2*np.pi/rc.lx,ezp[i],ezm[i],lcp[i],lcm[i], file=outf)
    outf.close()
    t_fin = MPI.Wtime()-t_start
-   print 'Total time taken %0.3f'%t_fin
+   print('Total time taken %0.3f'%t_fin)
 
 rc.fin()
 

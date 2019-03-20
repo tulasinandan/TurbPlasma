@@ -12,7 +12,7 @@ def kspec(rc):
    eby=np.zeros(rc.nx/2+1)
    ebz=np.zeros(rc.nx/2+1)
    for it in range(bs,fs,step):
-      print 'time slice',it
+      print('time slice',it)
       rc.loadslice(it)
       kk,ekx,eky,ekz,ekb=af.fperpspecvec(rc.bx,rc.by,rc.bz)
       ebx=ebx+ekx ; eby=eby+eky ; ebz=ebz+ekz
@@ -23,7 +23,7 @@ def kspec(rc):
    ebx=ebx*float(step)/(float(fs-bs)*dk)
    outf=open('kspec.'+rc.dirname+'.dat','w')
    for i in range(rc.nx/2):
-      print >> outf, kk[i],ebx[i],eby[i],ebz[i] 
+      print(kk[i],ebx[i],eby[i],ebz[i], file=outf) 
    outf.close()
    
 if __name__=="__main__":

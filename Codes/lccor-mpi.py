@@ -60,7 +60,7 @@ for i in range(bs,fs):
       snddata[2,1]=np.sum(bycor)*rc.dy
    snddata[3,i] = 0.5*(snddata[1,i]+snddata[2,i])
 
-   print 't,lxc,lyc,lc\t',i,snddata[0,i],snddata[1,i],snddata[2,i],snddata[3,i]
+   print('t,lxc,lyc,lc\t',i,snddata[0,i],snddata[1,i],snddata[2,i],snddata[3,i])
 
 #
 # PROC 0 COLLECTS DATA AND WRITES THE FILE
@@ -81,12 +81,12 @@ else:
 comm.Barrier()
 #
 if rank == 0:
-   print 'Done Computing. Writing the file now'
+   print('Done Computing. Writing the file now')
    outf=open('acorl.'+rc.dirname+'.dat','w')
-   print >> outf, '#','t,\t tt,\t lxc,\t lyc,\t lc'
+   print('#','t,\t tt,\t lxc,\t lyc,\t lc', file=outf)
    for i in range(rc.numslices):
-      print >> outf, tt[i],tt[i]*2*np.pi/rc.lx,lxc[i],lyc[i],lc[i]
+      print(tt[i],tt[i]*2*np.pi/rc.lx,lxc[i],lyc[i],lc[i], file=outf)
    outf.close()
    t_fin = MPI.Wtime()-t_start
-   print 'Total time taken %0.3f'%t_fin
+   print('Total time taken %0.3f'%t_fin)
 #

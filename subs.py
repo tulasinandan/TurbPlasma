@@ -31,7 +31,7 @@ def create_object():
    try:
       obj=sys.argv[1]
    except:
-      obj=raw_input("At least tell me what kind of code: ")
+      obj=input("At least tell me what kind of code: ")
 
    exec('from '+obj+' import '+obj)
    exec('myobj = '+obj)
@@ -39,9 +39,9 @@ def create_object():
    return rc
 
 def ask_for_steps(nslices):
-   print 'There are '+str(nslices)+' time snapshots'
-   print 'Please provide the first, last and step of snapshots to read:'
-   slc=raw_input().split()
+   print('There are '+str(nslices)+' time snapshots')
+   print('Please provide the first, last and step of snapshots to read:')
+   slc=input().split()
    bs=int(slc[0]); fs=int(slc[1]); step=int(slc[2])
    return bs,fs,step
 
@@ -151,7 +151,7 @@ def imss(fdic,
            fdic['yy'][IDX[1]][0],
            fdic['yy'][IDX[1]][-1]]
 
-    if kwargs.has_key('cmap'): cmap=kwargs.pop('cmap')
+    if 'cmap' in kwargs: cmap=kwargs.pop('cmap')
     else:                      cmap='PuOr'
 
     im = ax.imshow(plt_val[IDX].T,

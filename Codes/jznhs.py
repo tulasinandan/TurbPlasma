@@ -12,7 +12,7 @@ jzt=np.zeros((rc.nx,rc.ny,rc.nz,nt))
 
 jzb=0; jzpdf=0
 for it in range(bs,fs,step):
-   print 'time slice',it
+   print('time slice',it)
    rc.loadslice(it)
    tmp1,tmp2 = af.normhist(rc.jz,min=-20.,max=20.)
    jzb=jzb+tmp1
@@ -21,7 +21,7 @@ jzb=jzb/nt; jzpdf=jzpdf/nt
 
 outf=open('jznh.'+rc.dirname+'.dat','w')
 for i in range(len(jzb)):
-   print >> outf,jzb[i],jzpdf[i]
+   print(jzb[i],jzpdf[i], file=outf)
 outf.close()
 
 rc.fin()

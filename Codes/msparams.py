@@ -27,4 +27,4 @@ if __name__=="__main__":
    from subs import create_object
    rc=create_object()
    msp=msparams(rc,2.,5.)
-   print msp
+   print(msp)

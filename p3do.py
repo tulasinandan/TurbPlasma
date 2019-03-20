@@ -39,7 +39,7 @@
 ###########################################################################
 
 import numpy as np
-from commands import getstatusoutput as syscomout
+from subprocess import getstatusoutput as syscomout
 from os.path import basename, realpath, exists
 import AnalysisFunctions as af
 from scipy.ndimage import gaussian_filter as gf
@@ -54,22 +54,22 @@ class p3do(object):
    def __init__(self,shelldirname="",code_type="",data_type="",filenum=""):
       # If no rundir specified
       if len(shelldirname) == 0: # Start init prompt
-         shelldirname = raw_input('Please enter the rundir: ') 
+         shelldirname = input('Please enter the rundir: ') 
       self.rundir = realpath(shelldirname)
       self.dirname= basename(realpath(shelldirname))
       # If code type not specified
       if len(code_type) == 0:
-         self.code_type=raw_input("GIT or PIC or Hybrid? (type g or p or h): ")
+         self.code_type=input("GIT or PIC or Hybrid? (type g or p or h): ")
       else:
          self.code_type = code_type
       # If Git version of the code AND filenum not given
       if self.code_type == 'g' and len(filenum) == 0:
-         self.filenum=raw_input("Please enter the file number to load (e.g. 000): ")
+         self.filenum=input("Please enter the file number to load (e.g. 000): ")
       else:
          self.filenum=filenum
       # If data type not specified
       if len(data_type) == 0:
-         self.data_type=raw_input("Data Type? [(b)yte/ double (bb)yte/ (f)our byte/ (d)ouble precision] ")
+         self.data_type=input("Data Type? [(b)yte/ double (bb)yte/ (f)our byte/ (d)ouble precision] ")
       else:
          self.data_type = data_type
 
@@ -87,7 +87,7 @@ class p3do(object):
 
       # If byte or double byte data, open the log file.
       if self.data_type in ("b", "bb"):
-         print self.rundir+'/staging/movie.log.'+self.filenum
+         print(self.rundir+'/staging/movie.log.'+self.filenum)
          self.logfile=open(self.rundir+"/staging/movie.log."+self.filenum,"r")
          self.logvars=['rho', 'jx', 'jy', 'jz', 'bx', 'by', 'bz', 'ex', 'ey'\
          , 'ez', 'ne', 'jex', 'jey', 'jez', 'pexx', 'peyy', 'pezz', 'pexy', \
@@ -256,7 +256,7 @@ class p3do(object):
 ####
    def addattr(self,key,val):
       for i in key:
-         print 'Adding '+i 
+         print('Adding '+i) 
          comm='self.'+i+'=val[key.index("'+i+'")]'; exec(comm)
          if isinstance(val[key.index(i)],np.ndarray):
             exec('self.mmd["'+i+'"]=[self.'+i+'.min(),self.'+i+'.max()]')
