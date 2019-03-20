@@ -41,7 +41,7 @@
 import numpy as np
 from subprocess import getstatusoutput as syscomout
 from os.path import basename, realpath, exists
-import AnalysisFunctions as af
+import TurbPlasma.Analysis.AnalysisFunctions as af
 from scipy.ndimage import gaussian_filter as gf
    
 class p3do(object):
