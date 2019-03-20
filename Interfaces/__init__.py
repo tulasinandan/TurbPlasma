@@ -1,2 +1,2 @@
-from .Simulations import *
-from .Spacecraft import *
+from . import Simulations 
+from . import Spacecraft 

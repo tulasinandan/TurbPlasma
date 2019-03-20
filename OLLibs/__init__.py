@@ -1,2 +1,1 @@
-#from .C import partstep
-from .F90 import *
+from . import (F90, C)

@@ -1,2 +1,2 @@
-import Simulations
-import TimeSeries
+from . import Simulations
+from . import TimeSeries

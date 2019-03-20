@@ -1,1 +1,1 @@
-from faf import *
+from .faf import *

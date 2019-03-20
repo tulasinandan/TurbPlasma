@@ -1,1 +1,1 @@
-import AnalysisFunctions
+from .AnalysisFunctions import *

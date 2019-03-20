@@ -40,7 +40,7 @@
 
 import numpy as np
 from os.path import basename, realpath, exists
-import TurbPlasma.Analysis.Simulations.AnalysisFunctions as af
+import TurbPlasma.Analysis.Simulations as af
 from scipy.ndimage import gaussian_filter as gf
 from TurbPlasma.Utilities.subs import calc_dep
    
