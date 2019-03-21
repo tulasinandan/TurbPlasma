@@ -8,7 +8,7 @@ from ..Simulations import AnalysisFunctions as af
 import pandas as pd
 #import seaborn as sns
 import matplotlib.pyplot as plt
-import OLLibs.F90 as ftsa
+from .OLLibs import F90 as ftsa
 
 pi = np.pi
 
