@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter as gf
 from numpy import newaxis as nna
 import os
-from TurbPlasma.OLLibs.F90.Simulations import faf
+from .OLLibs.F90 import faf
 
 #==================================================
 
