@@ -4,11 +4,11 @@ sys.path.insert(0,os.environ['HOME']+'/AJGAR/TurbPlasma')
 import random as rnd
 import numpy as np
 import numpy.fft as nf
-import TurbPlasma.Analysis.Simulations as af
+from ..Simulations import AnalysisFunctions as af
 import pandas as pd
 #import seaborn as sns
 import matplotlib.pyplot as plt
-import TurbPlasma.Analysis.TimeSeries.OLLibs.F90 as ftsa
+import OLLibs.F90 as ftsa
 
 pi = np.pi
 
