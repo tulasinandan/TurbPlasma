@@ -4,12 +4,11 @@ sys.path.insert(0,os.environ['HOME']+'/AJGAR/TurbPlasma')
 import random as rnd
 import numpy as np
 import numpy.fft as nf
-import AnalysisFunctions as af
+import TurbPlasma.Analysis.Simulations as af
 import pandas as pd
 #import seaborn as sns
 import matplotlib.pyplot as plt
-from . import ftsa
-import numba
+import TurbPlasma.Analysis.TimeSeries.OLLibs.F90 as ftsa
 
 pi = np.pi
 
@@ -122,7 +121,6 @@ def fspec(a_in,dt,winkind='tukey'):
    spec=abs(fa)**2 
    return fq,spec
 
-@numba.jit
 def sdk(series, lags, dt):
    k = []; tau=[]
    series = series.copy()
@@ -135,7 +133,6 @@ def sdk(series, lags, dt):
    tau = pd.Series(tau)
    return tau, k
 
-@numba.jit
 def calc_pdf(series,weight=100,inc=None,Normalize=False):
 # find rms, create empty array of arrays for bins
    if inc is not None:

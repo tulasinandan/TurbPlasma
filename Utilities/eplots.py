@@ -48,6 +48,6 @@ def turbeplt(rc,sv=None,**kwargs):
    plt.show()
 
 if __name__=="__main__":
-   from subs import create_object
+   from TurbPlasma.Utilities.subs import create_object
    rc=create_object()
    eplt(rc,timeunit='nl',sv='png',linewidth=2)

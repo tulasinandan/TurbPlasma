@@ -2,17 +2,17 @@
 """
 Created on Thu Jun 30 20:08:29 2016
 
-@author: Manuel
+@authors: Manuel, Tulasi
 """
 
 import pandas as pd
 import numpy as np
-from Voyager import *
 
 
-def logarray(maxval):
+def logint(maxval):
 	"""
-	Routine to return an array in logarithmic space
+        Routine to return logarithmically spaced integers as:
+        1 2 3 4 5 6 7 8 9 10 20 30 ... 100 200 ... 1000 ... 10000 ....
 	Input:
 		maxval: The max value that the array will not surpass
 	Output:
@@ -58,8 +58,6 @@ def gen_log_space(limit, n):
 			# round, re-adjust to 0 indexing (i.e. minus 1) and return np.uint64 array
 	return np.array(map(lambda x: round(x)-1, result), dtype=np.int)
 
-
-
 def drop_outliers(df, lower_limit, upper_limit, ws, std):
 	"""
 	Routine to drop outliers that survive the range limiter via standard deviation
@@ -87,57 +85,6 @@ def drop_outliers(df, lower_limit, upper_limit, ws, std):
 	return df
 
 
-
-def bad_data_drop(bad_data):
-	"""
-	Routine to plot the bad data before dropping bad data from an array of bad data ranges
-	Input:
-		bad_data: the array of two index array ranges for each range of bad data
-	Output:
-		The cleaned data of RTN components, as well as the list of bad data ranges that were skipped.
-		
-	"""
-	import matplotlib.pyplot as plt
-## bad_data is a two column list/array
-	y = 'y'
-	n = 'n'
-# Read in data for B1, B2, and B3
-	xdata = pd.read_pickle('/data/DATA-CODES/processed_data/Data_01082019/Vy1BrFilledCleaned_1977_1982_02012019.pkl')
-	ydata = pd.read_pickle('/data/DATA-CODES/processed_data/Data_01082019/Vy1BtFilledCleaned_1977_1982_02012019.pkl')
-	zdata = pd.read_pickle('/data/DATA-CODES/processed_data/Data_01082019/Vy1BnFilledCleaned_1977_1982_02012019.pkl')
-# Create arrays to record start/stop of skipped intervals
-	start = []
-	stop = []
-	xdata = xdata.copy()
-	ydata = ydata.copy()
-	zdata = zdata.copy()
-# Go through each start/stop in bad_data and take it out of each mag field
-	for i in np.arange(len(bad_data)):
-		print(bad_data[i][0])
-		print(bad_data[i][1])
-		plt.clf()
-		if bad_data[i][0] == 0:
-			plt.plot(xdata[int(bad_data[i][0]):int(bad_data[i][1])+5000],'.-')
-		else:
-			plt.plot(xdata[int(bad_data[i][0])-10000:int(bad_data[i][1])+30000],'.-')
-		plt.show()
-		remove = input('Remove the Plotted Data?: ')
-		remove = str(remove)
-		#while ((remove == 'y') or (remove == 'n')):
-		#	remove = str(raw_input('Remove the Plotted Data?: '))
-
-		#if (remove == 'y'):
-			#xdata[int(bad_data[0][i]):int(bad_data[1][i])] = np.NaN
-			#ydata[int(bad_data[0][i]):int(bad_data[1][i])] = np.NaN
-			#zdata[int(bad_data[0][i]):int(bad_data[1][i])] = np.NaN
-		
-		if (remove == 'n'):#else:
-			start += [int(bad_data[i][0])]
-			stop += [int(bad_data[i][1])]
-	bad_skipped = [start, stop]
-	return xdata, ydata, zdata, bad_skipped
-		
-
 def PVI(ax,ay,az,lag):
 	"""
 	Routine to calculate the Partial Variance Increment between three time series, normalized
@@ -160,8 +107,6 @@ def PVI(ax,ay,az,lag):
 	mag = dax.pow(2)+day.pow(2)+daz.pow(2)
 	return (mag.div(mag.mean())).pow(.5)
     
-
-
 def structure(ax, ay, az, ar_lags, ar_powers):
 	"""
 	Routine to compute the Structure coefficients of a certain series or number of series to different orders
