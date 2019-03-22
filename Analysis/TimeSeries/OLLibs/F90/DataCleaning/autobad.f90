@@ -19,8 +19,8 @@ subroutine autobad(ai, ao, nt, ws, numdev, fill)
    win=2*ws+1
    ao=ai
    do i=1+ws,nt-ws
-      X0 = nanmean(ai(i-ws:i+ws),win)
-      S0 =  nanstd(ai(i-ws:i+ws),win)
+      X0 = nanmean(ao(i-ws:i+ws),win)
+      S0 =  nanstd(ao(i-ws:i+ws),win)
       if (abs(ai(i)-X0) > numdev*S0) then
          if (fill .eq. -2.379152e33) then
             ao(i) = X0
